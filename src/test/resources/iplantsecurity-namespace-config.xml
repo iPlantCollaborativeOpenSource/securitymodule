@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesource.org/schema/mule/core/2.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:spring="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:xm="http://www.mulesource.org/schema/mule/xml/2.2" xmlns:cxf="http://www.mulesource.org/schema/mule/cxf/2.2"
+  xmlns:mule-ss="http://www.mulesource.org/schema/mule/spring-security/2.2" xmlns:iplant-sec="http://www.mulesource.org/schema/mule/iplantsecurity/2.2"
+  xmlns:ss="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util"
+  xmlns:vm="http://www.mulesource.org/schema/mule/vm/2.2"
+  xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+        http://www.mulesource.org/schema/mule/core/2.2 http://www.mulesource.org/schema/mule/core/2.2/mule.xsd
+        http://www.mulesource.org/schema/mule/xml/2.2 http://www.mulesource.org/schema/mule/xml/2.2/mule-xml.xsd
+        http://www.mulesource.org/schema/mule/cxf/2.2 http://www.mulesource.org/schema/mule/cxf/2.2/mule-cxf.xsd
+        http://www.mulesource.org/schema/mule/spring-security/2.2 http://www.mulesource.org/schema/mule/spring-security/2.2/mule-spring-security.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/scema/util/spring-util-2.5.xsd
+        http://www.mulesource.org/schema/mule/vm/2.2 http://www.mulesource.org/schema/mule/vm/2.2/mule-vm.xsd
+        http://www.mulesource.org/schema/mule/iplantsecurity/2.2 META-INF/mule-iplantsecurity.xsd
+        ">
+
+  <spring:beans>
+    <spring:bean id="samlProvider" class="org.iplantc.security.Saml2AuthenticationProvider" />
+
+    <spring:bean id="providerManager" class="org.springframework.security.providers.ProviderManager">
+      <spring:property name="providers">
+        <spring:list>
+          <spring:ref local="samlProvider" />
+        </spring:list>
+      </spring:property>
+    </spring:bean>
+
+    <spring:bean id="providerAdapter" class="org.mule.module.spring.security.SpringProviderAdapter">
+      <spring:property name="delegate" ref="providerManager" />
+    </spring:bean>
+  </spring:beans>
+
+  <mule-ss:security-manager>
+    <mule-ss:delegate-security-provider name="iPlantSamlSecurityProvider"
+      delegate-ref="providerManager">
+      <mule-ss:security-property name="securityMode" value="MODE_GLOBAL" />
+    </mule-ss:delegate-security-provider>
+  </mule-ss:security-manager>
+
+  <model name="main">
+    <service name="testService">
+      <inbound>
+        <vm:inbound-endpoint path="in" synchronous="true">
+          <iplant-sec:iplant-security-filter>
+            <iplant-sec:decoder>
+              <iplant-sec:key-store-path>keystore.jceks</iplant-sec:key-store-path>
+              <iplant-sec:key-store-password>changeit</iplant-sec:key-store-password>
+              <iplant-sec:key-store-type>JCEKS</iplant-sec:key-store-type>
+              <iplant-sec:key-encrypting-key-pair-alias>encrypting</iplant-sec:key-encrypting-key-pair-alias>
+              <iplant-sec:key-encrypting-key-pair-password>changeit</iplant-sec:key-encrypting-key-pair-password>
+              <iplant-sec:trusted-signing-certificate-aliases>
+                <spring:value>signing</spring:value>
+                <spring:value>signing2</spring:value>
+              </iplant-sec:trusted-signing-certificate-aliases>
+            </iplant-sec:decoder>
+          </iplant-sec:iplant-security-filter>
+        </vm:inbound-endpoint>
+      </inbound>
+    </service>
+  </model>
+</mule>

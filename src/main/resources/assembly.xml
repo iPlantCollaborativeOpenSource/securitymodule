@@ -1,0 +1,61 @@
+<!--
+Assembly descriptor for the full distribution.
+-->
+<assembly>
+  <id></id>
+  <formats>
+	<format>zip</format>  
+    <format>tar.gz</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>${project.basedir}/target/</directory>
+      <includes>
+        <include>*.jar</include>
+      </includes>
+      <outputDirectory>/</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>${project.basedir}/target/dependencies/</directory>
+      <includes>
+      	<include>activation-*-osgi.jar</include>
+      	<include>aopalliance-*.jar</include>
+      	<include>backport-util-concurrent-*-osgi.jar</include>
+      	<include>bcprov-jdk*-*.jar</include>
+      	<include>dom4j-*.jar</include>
+      	<include>geronimo-*.jar</include>
+      	<include>jaxen-*.jar</include>
+      	<include>jcip-annotations-*.jar</include>
+      	<include>jcl*.jar</include>
+      	<include>jdom*.jar</include>
+      	<include>joda*.jar</include>
+      	<include>jug*.jar</include>
+      	<include>jul*.jar</include>
+      	<include>log4j*.jar</include>
+      	<include>logkit*.jar</include>
+      	<include>not-yet-commons-ssl*.jar</include>
+      	<include>open*.jar</include>
+      	<include>resolver*.jar</include>
+      	<!-- the following <include> means that two versions of serializer jar will be included:
+      			serializer-2.7.1.jar
+				serializer-2.9.1.jar
+				servlet-api-2.5.jar -->
+      	<include>servlet-api*.jar</include>
+      	<include>serializer-2.9*.jar</include>
+      	<include>slf4j-*.jar</include>
+      	<include>velocity*.jar</include>
+      	<!-- the following <include> means that two versions of xml apis jar will be included:
+      			xml-apis-1.3.04.jar
+				xml-apis-2.9.1.jar
+				xmlsec-1.4.3.jar
+				xmltooling-1.2.1.jar -->
+      	<include>xml-apis*.jar</include>
+      	<include>xmlsec*.jar</include>
+      	<include>xmltooling*.jar</include>
+      	<include>xerces2.9.1.jar</include>
+      	<include>xalan-2.7.1.jar</include>
+      </includes>
+      <outputDirectory>/lib/user</outputDirectory>
+    </fileSet>
+  </fileSets>
+</assembly>

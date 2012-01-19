@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://www.mulesource.org/schema/mule/iplantsecurity/2.2" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:mule="http://www.mulesource.org/schema/mule/core/2.2" xmlns:schemadoc="http://www.mulesource.org/schema/mule/schemadoc/2.2"
+  targetNamespace="http://www.mulesource.org/schema/mule/iplantsecurity/2.2" elementFormDefault="qualified"
+  attributeFormDefault="unqualified">
+
+  <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:import namespace="http://www.mulesource.org/schema/mule/core/2.2" schemaLocation="http://www.mulesource.org/schema/mule/core/2.2/mule.xsd" />
+  <xsd:import namespace="http://www.mulesource.org/schema/mule/schemadoc/2.2" schemaLocation="http://www.mulesource.org/schema/mule/schemadoc/2.2/mule-schemadoc.xsd" />
+  <xsd:import namespace="http://www.mulesource.org/schema/mule/spring-security/2.2" schemaLocation="http://www.mulesource.org/schema/mule/spring-security/2.2/mule-spring-security.xsd" />
+
+  <xsd:annotation>
+    <xsd:documentation>Provides security for iPlant services using SAML 2.0</xsd:documentation>
+    <xsd:appinfo>
+      <schemadoc:short-name>iplantsecurity</schemadoc:short-name>
+      <schemadoc:page-title>iPlant Security Mule Module</schemadoc:page-title>
+    </xsd:appinfo>
+  </xsd:annotation>
+
+  <xsd:complexType name="assertionEncodingType">
+    <xsd:all>
+      <xsd:element name="key-store-path"/>
+      <xsd:element name="key-store-password"/>
+      <xsd:element name="key-store-type"/>
+      <xsd:element name="key-encrypting-key-pair-alias"/>
+      <xsd:element name="key-encrypting-key-pair-password"/>
+      <xsd:element name="trusted-signing-certificate-aliases" type="mule:listOrSetType"/>
+    </xsd:all>
+  </xsd:complexType>
+
+  <xsd:element name="iplant-security-filter" type="iplantSecurityFilterType" substitutionGroup="mule:abstract-security-filter">
+    <xsd:annotation>
+      <xsd:documentation>
+        Authenticates users via information in a custom HTTP header.
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:complexType name="iplantSecurityFilterType" mixed="true">
+    <xsd:complexContent>
+      <xsd:extension base="mule:abstractSecurityFilterType">
+        <xsd:all>
+          <xsd:element name="securityEnabled" minOccurs="0" maxOccurs="1" />
+          <xsd:element name="decoder" type="assertionEncodingType" minOccurs="1" maxOccurs="1"/>
+        </xsd:all>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+</xsd:schema>
